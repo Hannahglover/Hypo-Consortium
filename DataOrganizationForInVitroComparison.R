@@ -92,7 +92,7 @@ BB_002_PassedQC = subset(BB_002, percent.mt < 10 & nFeature_RNA > 1000)
 
 InVitro = as.data.frame(rowMeans(BB_002_PassedQC@assays$RNA@layers$counts))
 colnames(InVitro) = "DoegeLab_InVitroARC"
+InVitro$DoegeLab_InVitroARC <- (InVitro[["DoegeLab_InVitroARC"]]/sum(InVitro)) *1e6 #Convert to TPM
 row.names(InVitro) = row.names(BB_002_PassedQC@assays$RNA) #33538 genes
-InVitro$DoegeLab_InVitroARC <- (InVitro/sum(InVitro)) *1e6 #Convert to TPM
 write.csv(InVitro, "DoegeLab_InVitroARCNeurons_TPM_ForPlot3.csv")
 
