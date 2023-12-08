@@ -4,7 +4,7 @@ library(edgeR)
 
 #### HUMAN HYPO - ALL CELLS #### FOR PLOT 1
 KaZhouAll <- readRDS("/Users/hannahglover/Dropbox/Columbia/Brian Hypothalamus/ScienceAdvances_2023_Revision2/CLEAN_SEURAT/KaZhouAll.rds")
-HumanHypoAllCells <- as.data.frame(rowMeans(KaZhouAll@assays$RNA@counts))
+HumanHypoAllCells <- as.data.frame(rowSums(KaZhouAll@assays$RNA@counts))
 colnames(HumanHypoAllCells) <- "HumanHypo_AllCells_AllTimepoints"
 row.names(HumanHypoAllCells) <- row.names(KaZhouAll@assays$RNA) #36116 genes
 
@@ -60,7 +60,7 @@ Idents(EdKaZhouHypoNeurons) <- "FetalExtrapolated"
 CheckPopulations <- as.data.frame(table(EdKaZhouHypoNeurons$NucleiAge ))
 CheckPopulations20 <- subset(CheckPopulations, Freq >= 20)
 
-HumanHypoNeurons <- as.data.frame(rowMeans(EdKaZhouHypoNeurons@assays$RNA@counts))
+HumanHypoNeurons <- as.data.frame(rowSums(EdKaZhouHypoNeurons@assays$RNA@counts))
 colnames(HumanHypoNeurons) <- "HumanHypo_Neurons_AllTimepoints"
 row.names(HumanHypoNeurons) <- row.names(EdKaZhouHypoNeurons@assays$RNA) #36116 genes
 
@@ -69,7 +69,7 @@ KeepPopulations = subset(CheckPopulations20$Var1, ! CheckPopulations20$Var1 %in%
 for(x in KeepPopulations){
   Idents(EdKaZhouHypoNeurons) <- "NucleiAge"
   EdKaZhouHypoNeurons_ByTimepoint <- subset(EdKaZhouHypoNeurons, idents = x)
-  HumanHypoTimepoint <- as.data.frame(rowMeans(EdKaZhouHypoNeurons_ByTimepoint@assays$RNA@counts))
+  HumanHypoTimepoint <- as.data.frame(rowSums(EdKaZhouHypoNeurons_ByTimepoint@assays$RNA@counts))
   colnames(HumanHypoTimepoint) <- paste0("HYPO_", x)
   HumanHypoTimepoint[[paste0("HYPO_", x)]] <- (HumanHypoTimepoint[[paste0("HYPO_", x)]]/sum(HumanHypoTimepoint)) *1e6 #Convert to TPM
   row.names(HumanHypoTimepoint) <- row.names(EdKaZhouHypoNeurons_ByTimepoint@assays$RNA) 
@@ -90,7 +90,7 @@ BB_002 =CreateSeuratObject(counts = BB_002, project = "iPSC Cont")
 BB_002[["percent.mt"]] <- PercentageFeatureSet(BB_002, pattern = "^MT-")
 BB_002_PassedQC = subset(BB_002, percent.mt < 10 & nFeature_RNA > 1000)
 
-InVitro = as.data.frame(rowMeans(BB_002_PassedQC@assays$RNA@layers$counts))
+InVitro = as.data.frame(rowSums(BB_002_PassedQC@assays$RNA@layers$counts))
 colnames(InVitro) = "DoegeLab_InVitroARC"
 InVitro$DoegeLab_InVitroARC <- (InVitro[["DoegeLab_InVitroARC"]]/sum(InVitro)) *1e6 #Convert to TPM
 row.names(InVitro) = row.names(BB_002_PassedQC@assays$RNA) #33538 genes
